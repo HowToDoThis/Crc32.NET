@@ -1,7 +1,9 @@
-﻿#if !NETCORE
+﻿#if !NET
 using System;
 using System.Linq;
+
 using Force.Crc32.Tests.Crc32Implementations;
+
 using NUnit.Framework;
 
 namespace Force.Crc32.Tests
@@ -24,9 +26,9 @@ namespace Force.Crc32.Tests
 		[Test]
 		public void RepeatedBytePatternTest()
 		{
-			foreach (var x in Enumerable.Range(0, 256))
+			foreach (var x in Enumerable.Range(0, 256).ToList())
 			{
-				foreach (int len in Enumerable.Range(1, 32))
+				foreach (int len in Enumerable.Range(1, 32).ToList())
 				{
 					var data = Enumerable.Repeat((byte)x, len).ToArray();
 					TestByteSequence(data);
@@ -54,13 +56,13 @@ namespace Force.Crc32.Tests
 		[TestCase(0xFF)]
 		public void SlidingBytePatternTest(byte fillValue)
 		{
-			foreach (int len in Enumerable.Range(1, 32))
+			foreach (int len in Enumerable.Range(1, 32).ToList())
 			{
 				var data = Enumerable.Repeat(fillValue, len).ToArray();
 
-				foreach (var i in Enumerable.Range(0, len))
+				foreach (var i in Enumerable.Range(0, len).ToList())
 				{
-					foreach (var x in Enumerable.Range(0, 256))
+					foreach (var x in Enumerable.Range(0, 256).ToList())
 					{
 						data[i] = (byte)x;
 						TestByteSequence(data);

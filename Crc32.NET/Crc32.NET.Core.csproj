@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.2.1</VersionPrefix>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net20</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Crc32.NET</AssemblyName>
     <!--DelaySign>true</DelaySign>

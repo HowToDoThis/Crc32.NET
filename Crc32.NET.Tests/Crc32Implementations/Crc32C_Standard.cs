@@ -1,11 +1,10 @@
-﻿#if NETCORE
+﻿#if NET
 namespace Force.Crc32.Tests.Crc32Implementations
 {
 	public class Crc32C_Standard : CrcCalculator
 	{
 		public Crc32C_Standard() : base("Crc32C.Standard")
-		{
-		}
+		{ }
 
 		public override uint Calculate(byte[] data)
 		{

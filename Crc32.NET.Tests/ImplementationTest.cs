@@ -4,7 +4,7 @@ using System.Text;
 
 using NUnit.Framework;
 
-#if !NETCORE
+#if !NET
 using E = Crc32.Crc32Algorithm;
 #endif
 
@@ -15,7 +15,7 @@ namespace Force.Crc32.Tests
 	public class ImplementationTest
 	{
 
-#if !NETCORE
+#if !NET
 		[TestCase("Hello", 3)]
 		[TestCase("Nazdar", 0)]
 		[TestCase("Ahoj", 1)]
@@ -38,7 +38,7 @@ namespace Force.Crc32.Tests
 			Assert.That(Crc32Algorithm.Compute(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }), Is.EqualTo(622876539));
 		}
 
-#if !NETCORE
+#if !NET
 		[Test]
 		public void ResultConsistencyAsHashAlgorithm()
 		{
@@ -59,6 +59,7 @@ namespace Force.Crc32.Tests
 		{
 			var bytes = new byte[30000];
 			new Random().NextBytes(bytes);
+
 			var r1 = Crc32Algorithm.Append(0, bytes, 0, 15000);
 			var r2 = Crc32Algorithm.Append(r1, bytes, 15000, 15000);
 			var r3 = Crc32Algorithm.Append(0, bytes, 0, 30000);
@@ -70,9 +71,13 @@ namespace Force.Crc32.Tests
 		{
 			var bytes = new byte[30000];
 			new Random().NextBytes(bytes);
+
 			var crc1 = Crc32Algorithm.Append(0, bytes, 0, bytes.Length);
 			var crc2Bytes = new Crc32Algorithm().ComputeHash(bytes);
-			if (BitConverter.IsLittleEndian) crc2Bytes = crc2Bytes.Reverse().ToArray();
+
+			if (BitConverter.IsLittleEndian)
+				crc2Bytes = crc2Bytes.Reverse().ToArray();
+
 			var crc2 = BitConverter.ToUInt32(crc2Bytes, 0);
 			Assert.That(crc2, Is.EqualTo(crc1));
 		}
@@ -82,9 +87,13 @@ namespace Force.Crc32.Tests
 		{
 			var bytes = new byte[30000];
 			new Random().NextBytes(bytes);
+
 			var crc1 = Crc32Algorithm.Append(0, bytes, 0, bytes.Length);
 			var crc2Bytes = new Crc32Algorithm(false).ComputeHash(bytes);
-			if (!BitConverter.IsLittleEndian) crc2Bytes = crc2Bytes.Reverse().ToArray();
+
+			if (!BitConverter.IsLittleEndian)
+				crc2Bytes = crc2Bytes.Reverse().ToArray();
+
 			var crc2 = BitConverter.ToUInt32(crc2Bytes, 0);
 			Assert.That(crc2, Is.EqualTo(crc1));
 		}
@@ -104,9 +113,11 @@ namespace Force.Crc32.Tests
 		{
 			var buf = new byte[length + 4];
 			var r = new Random();
+
 			r.NextBytes(buf);
 			Crc32Algorithm.ComputeAndWriteToEnd(buf);
 			Assert.That(Crc32Algorithm.IsValidWithCrcAtEnd(buf), Is.True);
+
 			buf[r.Next(buf.Length)] ^= 0x1;
 			Assert.That(Crc32Algorithm.IsValidWithCrcAtEnd(buf), Is.False);
 
@@ -115,6 +126,7 @@ namespace Force.Crc32.Tests
 			{
 				Crc32Algorithm.ComputeAndWriteToEnd(buf, 1, length - 2);
 				Assert.That(Crc32Algorithm.IsValidWithCrcAtEnd(buf, 1, length - 2 + 4), Is.True);
+
 				buf[1 + r.Next(buf.Length - 2)] ^= 0x1;
 				Assert.That(Crc32Algorithm.IsValidWithCrcAtEnd(buf, 1, length - 2 + 4), Is.False);
 			}

@@ -10,7 +10,6 @@ namespace Force.Crc32
 	public class Crc32CAlgorithm : HashAlgorithm
 	{
 		private uint _currentCrc;
-
 		private readonly bool _isBigEndian = true;
 
 		/// <summary>
@@ -27,8 +26,7 @@ namespace Force.Crc32
 		/// Initializes a new instance of the <see cref="Crc32CAlgorithm"/> class. 
 		/// </summary>
 		/// <param name="isBigEndian">Should return bytes result as big endian or little endian</param>
-		public Crc32CAlgorithm(bool isBigEndian = true)
-			: this()
+		public Crc32CAlgorithm(bool isBigEndian = true) : this()
 		{
 			_isBigEndian = isBigEndian;
 		}
@@ -48,9 +46,10 @@ namespace Force.Crc32
 		public static uint Append(uint initial, byte[] input, int offset, int length)
 		{
 			if (input == null)
-				throw new ArgumentNullException("input");
+				throw new ArgumentNullException(nameof(input));
 			if (offset < 0 || length < 0 || offset + length > input.Length)
-				throw new ArgumentOutOfRangeException("length");
+				throw new ArgumentOutOfRangeException(nameof(length));
+
 			return AppendInternal(initial, input, offset, length);
 		}
 
@@ -67,7 +66,8 @@ namespace Force.Crc32
 		public static uint Append(uint initial, byte[] input)
 		{
 			if (input == null)
-				throw new ArgumentNullException("input");
+				throw new ArgumentNullException(nameof(input));
+
 			return AppendInternal(initial, input, 0, input.Length);
 		}
 
@@ -103,13 +103,15 @@ namespace Force.Crc32
 		public static uint ComputeAndWriteToEnd(byte[] input, int offset, int length)
 		{
 			if (length + 4 > input.Length)
-				throw new ArgumentOutOfRangeException("length", "Length of data should be less than array length - 4 bytes of CRC data");
+				throw new ArgumentOutOfRangeException(nameof(length), "Length of data should be less than array length - 4 bytes of CRC data");
+
 			var crc = Append(0, input, offset, length);
 			var r = offset + length;
 			input[r] = (byte)crc;
 			input[r + 1] = (byte)(crc >> 8);
 			input[r + 2] = (byte)(crc >> 16);
 			input[r + 3] = (byte)(crc >> 24);
+
 			return crc;
 		}
 
@@ -121,7 +123,8 @@ namespace Force.Crc32
 		public static uint ComputeAndWriteToEnd(byte[] input)
 		{
 			if (input.Length < 4)
-				throw new ArgumentOutOfRangeException("input", "Input array should be 4 bytes at least");
+				throw new ArgumentOutOfRangeException(nameof(input), "Input array should be 4 bytes at least");
+
 			return ComputeAndWriteToEnd(input, 0, input.Length - 4);
 		}
 
@@ -145,7 +148,8 @@ namespace Force.Crc32
 		public static bool IsValidWithCrcAtEnd(byte[] input)
 		{
 			if (input.Length < 4)
-				throw new ArgumentOutOfRangeException("input", "Input array should be 4 bytes at least");
+				throw new ArgumentOutOfRangeException(nameof(input), "Input array should be 4 bytes at least");
+
 			return Append(0, input, 0, input.Length) == 0x48674BC7;
 		}
 
@@ -176,7 +180,7 @@ namespace Force.Crc32
 				return new[] { (byte)_currentCrc, (byte)(_currentCrc >> 8), (byte)(_currentCrc >> 16), (byte)(_currentCrc >> 24) };
 		}
 
-		private static readonly SafeProxyC _proxy = new SafeProxyC();
+		private static readonly SafeProxyC _proxy = new();
 
 		private static uint AppendInternal(uint initial, byte[] input, int offset, int length)
 		{

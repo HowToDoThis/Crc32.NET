@@ -1,4 +1,4 @@
-﻿#if !NETCORE
+﻿#if !NET
 
 namespace Force.Crc32.Tests.Crc32Implementations
 {

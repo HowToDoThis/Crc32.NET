@@ -1,4 +1,4 @@
-﻿#if !NETCORE
+﻿#if !NET
 using System;
 using System.Data.HashFunction;
 

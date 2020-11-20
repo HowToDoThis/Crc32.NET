@@ -1,10 +1,9 @@
-﻿#if !NETCORE
+﻿#if !NET
 namespace Force.Crc32.Tests.Crc32Implementations
 {
 	public class Dexiom_Quick_Crc32 : CrcCalculator
 	{
-		public Dexiom_Quick_Crc32()
-			: base("Dexiom.QuickCrc32")
+		public Dexiom_Quick_Crc32() : base("Dexiom.QuickCrc32")
 		{
 		}
 
